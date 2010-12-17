@@ -92,6 +92,37 @@ $(document).ready(function() {
         add_interface(new Interface("BizTalk to Document Man",      4));
         add_interface(new Interface("Biz Talk to Work flow",        1));
     }
+    draw();
+
+});
+
+function draw(){
+    for (var i in environments)
+        environments[i].draw();
+
+    draw_summary();
+}
+
+function format_currency(num) {
+    num = num.toString().replace(/\$|\,/g,'');
+    if(isNaN(num))
+        num = "0";
+    sign = (num == (num = Math.abs(num)));
+    num = Math.floor(num*100+0.50000000001);
+    cents = num%100;
+    num = Math.floor(num/100).toString();
+    if(cents<10)
+        cents = "0" + cents;
+    for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)
+        num = num.substring(0,num.length-(4*i+3))+','+
+    num.substring(num.length-(4*i+3));
+    return (((sign)?'':'-') + '' + num + '.' + cents);
+}
+
+function draw_summary(){
+
+    $("#summary").empty();
+    $("#summary").append("<h2>Summary</h2>");
 
     var total_bandwidth = 0;
     var total_processors = 0;
@@ -100,7 +131,6 @@ $(document).ready(function() {
     var total_licence = 0;
 
     for (var i in environments){
-        environments[i].draw();
         total_bandwidth += environments[i].get_bandwidth();
         total_processors += environments[i].get_processors();
         total_memory += environments[i].get_memory();
@@ -108,13 +138,25 @@ $(document).ready(function() {
         total_licence += environments[i].get_lisence();
     }
 
-    $("#summary").append("<div class='result'>Bandwidth: " + total_bandwidth + " Mbps</div>")
-    $("#summary").append("<div class='result'>Processors: " + total_processors + " Cores</div>")
-    $("#summary").append("<div class='result'>Memory: " + total_memory + " Gb</div>")
-    $("#summary").append("<div class='result'>Storage: " + total_storage + " Gb</div>")
-    $("#summary").append("<div class='result'>Licence: " + total_licence + " gbp</div>")
+    var cost_bandwidth = (total_bandwidth * parseFloat($("#cost_bandwidth").val())) ;
+    var cost_processors = (total_processors * parseFloat($("#cost_processor").val())) ;
+    var cost_memory = (total_memory * parseFloat($("#cost_memory").val())) ;
+    var cost_storage = (total_storage * parseFloat($("#cost_storage").val()));
 
-});
+    var total = cost_bandwidth + cost_processors + cost_memory + cost_storage;
+
+    $("#summary").append("<div class='result'>Bandwidth: " + total_bandwidth + " Mbps  cost per month " + format_currency(cost_bandwidth) + "</div>");
+    $("#summary").append("<div class='result'>Processors: " + total_processors + " Cores cost per month " + format_currency(cost_processors) + "</div>");
+    $("#summary").append("<div class='result'>Memory: " + total_memory + " Gb cost per month " + format_currency(cost_memory) + "</div>");
+    $("#summary").append("<div class='result'>Storage: " + total_storage + " Gb cost per month " + format_currency(cost_storage) + "</div>");
+
+    $("#summary").append("<div class='result'><b>Total cost " + format_currency(total) + " gbp per month</b></div>");
+
+    var cost_licence = total_licence;
+    $("#summary").append("<div class='result'>Licence: " + format_currency(total_licence) + " gbp</div>");
+
+}
+
 
 function Interface(name, bandwidth){return {
     name: name,
@@ -205,15 +247,29 @@ function from_id(id){
   return id.replace("_", " ");
 }
 
+var server_key = "";
+var environment_key = "";
+var interafce_key = "";
 $(function (){
 
-    $("#server_dialog").dialog({autoOpen: false, width: 350, modal:true});
-    $("#interface_dialog").dialog({autoOpen: false, width: 350, modal:true});
+    $("#server_dialog").dialog({autoOpen: false, width: 335, modal:true, buttons: { "ok": function() {
+
+       with(environments[environment_key].servers[server_key]){
+           processor =  parseInt($("#server_processor").val());
+           memory = parseInt($("#server_memory").val());
+           storage = parseInt($("#server_storage").val());
+           lisence = parseInt($("#server_lisence").val());
+           notes = $("#server_notes").val();
+       }
+
+       $(this).dialog("close");
+       draw_summary();
+    }}});
 
     $(".server").click(function(){
         var arr = this.id.split("_server_",2);
-        var environment_key = arr[0];
-        var server_key = from_id(arr[1]);
+        environment_key = arr[0];
+        server_key = from_id(arr[1]);
         var server = environments[environment_key].servers[server_key];
 
         $("#server_dialog").dialog("option", "title", "Server: " + server.name );
@@ -228,14 +284,28 @@ $(function (){
 
     $(".interface").click(function(){
         var arr = this.id.split("_interface_",2);
-        var environment_key = arr[0];
-        var interafce_key = from_id(arr[1]);
+        environment_key = arr[0];
+        interafce_key = from_id(arr[1]);
         var intfce = environments[environment_key].interfaces[interafce_key];
 
         $("#interface_dialog").dialog("option", "title", "Interface: " + intfce.name );
         $("#interface_bandwidth").val(intfce.bandwidth);
 
         $("#interface_dialog").dialog("open");
+    });
+
+    $("#interface_dialog").dialog({autoOpen: false, width: 335, modal:true, buttons: { "ok": function() {
+
+       with(environments[environment_key].interfaces[interafce_key]){
+           bandwidth = parseInt($("#interface_bandwidth").val());
+       }
+
+       $(this).dialog("close");
+       draw_summary();
+    }}});
+    
+    $("#calculate").click(function (){
+        draw_summary();
     });
 
 });
@@ -248,7 +318,6 @@ body {
     font-family: Arial,Helvetica;
     font-size: 70%;
 }
-
 
 #environments{
   width: 1024px;
@@ -265,12 +334,12 @@ body {
 .environment ul li {padding: 1px 1px 1px 2px}
 .environment ul li:hover {padding: 0px 0px 0px 1px; border: 1px solid black; cursor: pointer}
 
-.button { border: 1px solid black; width: 100px; height: 20px; background-color: grey; display: block; margin: 10px 10px 10px 0; padding: 0.5em; }
+.button { border: 1px solid black; width: 100px; height: 20px; background-color: #afafaf; display: block; margin: 10px 10px 10px 0; padding: 0.5em; font-size:larger; cursor: pointer}
 .subtitle { color: #D21241; font-size: 130%; font-weight: bold; margin: 0 0 5px -1px; padding: 10px 0 0 0;}
 
 .row label {width:200px; float:left }
 .row input {width:100px; float:left }
-.row textarea {width:300px; float:left }
+.row textarea {width:300px; float:left}
 
 .result {margin: 5px 0 0 10px}
 
@@ -278,18 +347,44 @@ body {
 #header img {float:left; margin: 0 20px 0 0px}
 #header h1 {padding: 40px 0 0 0px}
 
+#costs ul {list-style: none; padding:0; margin:0 0 0 10px;}
+#costs ul li label{width: 200px; display: block; float: left}
+#costs ul li input{width: 100px; display: block; float: none}
+
 
      </style>
   </head>
   <body>
     <div id="header">
         <img src="http://www.atosorigin.com/general/images/AtosOrigin_Olympic_Games_Logo.gif" >
-        <h1>CPDF Cloud asesment</h1>
+        <h1>Atosphere >> Cloud asesment >> CPDF</h1>
     </div>
+      <p>
+          Welcome to the Atosphere cloud calculator, this tool is designed to
+          help make it easy to workout how much it will cost to put your product into the cloud.
+          Before you start you will need to have a good idea about the servers in your architecture and the interfaces
+          bettween them and other servers and users. Click to add a new environment <i>feature not implemented</i> then add your servers and interfaces.
+      </p>
+      <p>
+          At the bottom of the page you are presented with the assumptions we have 
+          made apout price. Alter these to the pricings on your chosen cloud environment
+          and press calculate to get a rough estimate.
+      </p>
+
     <div id="environments"></div>
-    <div id="summary">
-        <h2>Summary</h2>
+    <div id="costs">
+        <h2>Costs</h2>
+        <form id="costs" name="form_costs">
+            <ul>
+                <li><label>Bandwidth cost per Mbps per month</label><input id="cost_bandwidth"  name="cost_bandwidth" type="text" value="10"></li>
+                <li><label>Processor cost per core per month</label><input id="cost_processor"  name="cost_processor" type="text" value="230"></li>
+                <li><label>Memory cost per Gb per month</label><input id="cost_memory"  name="cost_memory" type="text" value="100"></li>
+                <li><label>Storage cost per Gb per month</label><input id="cost_storage"  name="cost_storage" type="text" value="1"></li>
+            </ul>
+        </form>
+        <div id ="calculate" class="button">calculate</div>
     </div>
+    <div id="summary"></div>
     <div id="server_dialog" title="Dialog Title">
         <form>
             <div class="row"><label>Number of processors</label><input id="server_processor"  name="server_processor" type="text"></div>
