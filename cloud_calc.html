@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+   <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  <script>
+
+
+$(document).ready(function() {
+
+    environments["Collaboration"] = new Environment("Collaboration");
+    with(environments["Collaboration"]){
+        //                     server name              processors  memory  storage     Lience      Notes
+        add_server(new Server("Clear Case",             1,          2,      256,        0,          "needs licence costs added"));
+        add_server(new Server("Team Foundation Server", 1,          2,      512,        1581.32,    "assumed licence cost"));   //http://www.ecostsoftware.com/microsoft/microsoft-visual-studio-2008-team-system-team-foundation-server_p3630?gclid=CL-PtOqE8qUCFVBO4QodryllpQ
+        add_server(new Server("JIRA Confluence",        1,          2,      512,        1500,       "assumed cost"));             //http://www.atlassian.com/software/confluence/pricing.jsp
+        add_server(new Server("CI",                     1,          2,      256,        0,          "assumed open source" ));
+
+        //                           Interface name                 Bandwidth
+        add_interface(new Interface("Clear Case users",             1));
+        add_interface(new Interface("Team Foundation Server users", 1));
+        add_interface(new Interface("JIRA Confluence users",        1));
+
+    }
+
+    environments["Shadow"] = new Environment("Shadow");
+    with(environments["Shadow"]){
+        //                     server name          processors  memory  storage     Lience  Notes
+        add_server(new Server("CPDF",               1,          4,      256,        0,      ""));
+        add_server(new Server("Mitem",              1,          2,      256,        1500,   "assumed lisence cost"));
+        add_server(new Server("Chysalis Server",    1,          2,      256,        778,    "OS licence"));
+        add_server(new Server("SQL Server",         1,          2,      256,        1310,   "532 db lisence, 778 OS lisence"));
+        add_server(new Server("Biz Talk",           1,          2,      256,        778,    "free developer lisence"));
+        add_server(new Server("GIS",                1,          2,      256,        0,      "add licences"));
+        add_server(new Server("Prophet",            1,          2,      256,        0,      "add licences"));
+        add_server(new Server("Bank Validator",     1,          2,      256,        0,      "add licences"));
+        add_server(new Server("HMRC",               1,          2,      256,        0,      "add licences"));
+
+        //                           Interface name                 Bandwidth
+        add_interface(new Interface("CPDF to users",                1));
+        add_interface(new Interface("CPDF to ORPA",                 1));
+        add_interface(new Interface("CPDF to Document Management",  1));
+        add_interface(new Interface("Chysalis to users",            1));
+        add_interface(new Interface("Chrsalis DB to BACS",          1));
+        add_interface(new Interface("BizTalk to Document Man",      1));
+        add_interface(new Interface("Biz Talk to Work flow",        1));
+    }
+
+    environments["Test"] = new Environment("Test");
+    with(environments["Test"]){
+        //                     server name          processors  memory  storage     Lience  Notes
+        add_server(new Server("CPDF",               4,          8,      256,        0,      ""));
+        add_server(new Server("Mitem",              1,          2,      256,        1500,   "assumed lisence cost"));
+        add_server(new Server("Chysalis Server",    1,          2,      256,        778,    "OS licence"));
+        add_server(new Server("SQL Server",         1,          2,      256,        1310,   "532 db lisence, 778 OS lisence"));
+        add_server(new Server("Biz Talk",           1,          2,      256,        778,    "free developer lisence"));
+        add_server(new Server("GIS",                1,          2,      256,        0,      "add licences"));
+        add_server(new Server("Prophet",            1,          2,      256,        0,      "add licences"));
+        add_server(new Server("Bank Validator",     1,          2,      256,        0,      "add licences"));
+        add_server(new Server("HMRC",               1,          2,      256,        0,      "add licences"));
+        add_server(new Server("Load Simulator",     2,          2,      256,        0,      "add licences"));
+
+        //                           Interface name                 Bandwidth
+        add_interface(new Interface("CPDF to users",                1));
+        add_interface(new Interface("CPDF to ORPA",                 1));
+        add_interface(new Interface("CPDF to Document Management",  1));
+        add_interface(new Interface("Chysalis to users",            1));
+        add_interface(new Interface("Chrsalis DB to BACS",          1));
+        add_interface(new Interface("BizTalk to Document Man",      1));
+        add_interface(new Interface("Biz Talk to Work flow",        1));
+    }
+
+    environments["Production"] = new Environment("Production");
+    with(environments["Production"]){
+        //                     server name          processors  memory  storage     Lience  Notes
+        add_server(new Server("CPDF",               8,          16,     1024,       0,      ""));
+        add_server(new Server("Mitem",              2,          4,      256,        1500,   "assumed lisence cost"));
+        add_server(new Server("Chysalis Server",    2,          4,      256,        778,    "OS licence"));
+        add_server(new Server("SQL Server",         2,          4,      256,        1310,   "532 db lisence, 778 OS lisence"));
+        add_server(new Server("Biz Talk",           2,          4,      256,        778,    "free developer lisence"));
+        add_server(new Server("GIS",                2,          4,      256,        0,      "add licences"));
+        add_server(new Server("Prophet",            2,          4,      256,        0,      "add licences"));
+        add_server(new Server("Bank Validator",     2,          4,      256,        0,      "add licences"));
+
+        //                           Interface name                 Bandwidth
+        add_interface(new Interface("CPDF to users",                4));
+        add_interface(new Interface("CPDF to ORPA",                 1));
+        add_interface(new Interface("CPDF to Document Management",  4));
+        add_interface(new Interface("Chysalis to users",            4));
+        add_interface(new Interface("Chrsalis DB to BACS",          1));
+        add_interface(new Interface("BizTalk to Document Man",      4));
+        add_interface(new Interface("Biz Talk to Work flow",        1));
+    }
+
+    var total_bandwidth = 0;
+    var total_processors = 0;
+    var total_memory = 0;
+    var total_storage = 0;
+    var total_licence = 0;
+
+    for (var i in environments){
+        environments[i].draw();
+        total_bandwidth += environments[i].get_bandwidth();
+        total_processors += environments[i].get_processors();
+        total_memory += environments[i].get_memory();
+        total_storage += environments[i].get_storage();
+        total_licence += environments[i].get_lisence();
+    }
+
+    $("#summary").append("<div class='result'>Bandwidth: " + total_bandwidth + " Mbps</div>")
+    $("#summary").append("<div class='result'>Processors: " + total_processors + " Cores</div>")
+    $("#summary").append("<div class='result'>Memory: " + total_memory + " Gb</div>")
+    $("#summary").append("<div class='result'>Storage: " + total_storage + " Gb</div>")
+    $("#summary").append("<div class='result'>Licence: " + total_licence + " gbp</div>")
+
+});
+
+function Interface(name, bandwidth){return {
+    name: name,
+    bandwidth: bandwidth,
+    environment: new Object(),
+    get_li: function(){
+        var id = to_id(this.environment.name) + "_interface_" + to_id(this.name);
+        return "<li id='" + id + "' class='interface'>" + this.name + "</li>";
+    }
+}}
+
+function Server(name, processor, memory, storage, lisence, notes ){return {
+    name: name,
+    processor: processor,
+    memory: memory,
+    storage: storage,
+    lisence: lisence,
+    notes: notes,
+    environment: new Object(),
+    get_li: function(){
+        var id = to_id(this.environment.name) + "_server_" + to_id(this.name);
+        return "<li id='" + id + "' class='server'>" + this.name + "</li>";
+    }
+}}
+
+function Environment(name){return {
+    name: name,
+    interfaces: new Object(),
+    servers: new Object(),
+    add_interface: function(new_interface){
+        this.interfaces[new_interface.name] = new_interface;
+        this.interfaces[new_interface.name].environment = this;
+    },
+    add_server: function(server){
+        this.servers[server.name] = server;
+        this.servers[server.name].environment = this;
+    },
+    draw: function(){
+        var key = to_id(this.name);
+        var interfaces_ul_id = "interfaces_" + key;
+        var servers_ul_id = "servers_" + key;
+        $("#environments").append("<div id='" + key + "' class='environment'><h2>" + this.name + "</h2><p class='subtitle'>interfaces</p><ul id='" + interfaces_ul_id + "'></ul><p class='subtitle'>Servers</p><ul id='" + servers_ul_id + "'></ul></div>");
+
+        for (var i in this.interfaces)
+            $("#" + interfaces_ul_id).append(this.interfaces[i].get_li());
+
+        for (var j in this.servers)
+            $("#" + servers_ul_id).append(this.servers[j].get_li()); 
+    },
+    get_bandwidth: function(){
+        var bandwidth =0;
+        for (var i in this.interfaces)
+            bandwidth += this.interfaces[i].bandwidth;
+        return bandwidth;
+    },
+    get_processors: function(){
+        var ret =0;
+        for (var i in this.servers)
+            ret += this.servers[i].processor;
+        return ret;
+    },
+    get_memory: function(){
+        var ret =0;
+        for (var i in this.servers)
+            ret += this.servers[i].memory;
+        return ret;
+    },
+    get_storage: function(){
+        var ret =0;
+        for (var i in this.servers)
+            ret += this.servers[i].storage;
+        return ret;
+    },
+    get_lisence: function(){
+        var ret =0;
+        for (var i in this.servers)
+            ret += this.servers[i].lisence;
+        return ret;
+    }
+
+}}
+var environments = new Object();
+
+function to_id(key){
+  return key.replace(" ", "_");
+}
+function from_id(id){
+  return id.replace("_", " ");
+}
+
+$(function (){
+
+    $("#server_dialog").dialog({autoOpen: false, width: 350, modal:true});
+    $("#interface_dialog").dialog({autoOpen: false, width: 350, modal:true});
+
+    $(".server").click(function(){
+        var arr = this.id.split("_server_",2);
+        var environment_key = arr[0];
+        var server_key = from_id(arr[1]);
+        var server = environments[environment_key].servers[server_key];
+
+        $("#server_dialog").dialog("option", "title", "Server: " + server.name );
+        $("#server_processor").val(server.processor);
+        $("#server_memory").val(server.memory);
+        $("#server_storage").val(server.storage);
+        $("#server_lisence").val(server.lisence);
+        $("#server_notes").val(server.notes);
+
+        $("#server_dialog").dialog("open");
+    });
+
+    $(".interface").click(function(){
+        var arr = this.id.split("_interface_",2);
+        var environment_key = arr[0];
+        var interafce_key = from_id(arr[1]);
+        var intfce = environments[environment_key].interfaces[interafce_key];
+
+        $("#interface_dialog").dialog("option", "title", "Interface: " + intfce.name );
+        $("#interface_bandwidth").val(intfce.bandwidth);
+
+        $("#interface_dialog").dialog("open");
+    });
+
+});
+
+  </script>
+     <style>
+
+body {
+    color: #333333;
+    font-family: Arial,Helvetica;
+    font-size: 70%;
+}
+
+
+#environments{
+  width: 1024px;
+  height: 440px;
+  border: solid black 1px;
+  background-color: #afafaf;
+}
+
+#draggable { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
+#droppable { width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; }
+
+.environment{ width: 220px; height: 400px; padding: 0.5em; float: left; margin: 10px; background-color: #bfbfbf; border: 1px solid #909090}
+.environment ul {margin: 0px; padding: 0px; list-style: none}
+.environment ul li {padding: 1px 1px 1px 2px}
+.environment ul li:hover {padding: 0px 0px 0px 1px; border: 1px solid black; cursor: pointer}
+
+.button { border: 1px solid black; width: 100px; height: 20px; background-color: grey; display: block; margin: 10px 10px 10px 0; padding: 0.5em; }
+.subtitle { color: #D21241; font-size: 130%; font-weight: bold; margin: 0 0 5px -1px; padding: 10px 0 0 0;}
+
+.row label {width:200px; float:left }
+.row input {width:100px; float:left }
+.row textarea {width:300px; float:left }
+
+.result {margin: 5px 0 0 10px}
+
+#header {height: 69px; margin: 0 0 5px 5px}
+#header img {float:left; margin: 0 20px 0 0px}
+#header h1 {padding: 40px 0 0 0px}
+
+
+     </style>
+  </head>
+  <body>
+    <div id="header">
+        <img src="http://www.atosorigin.com/general/images/AtosOrigin_Olympic_Games_Logo.gif" >
+        <h1>CPDF Cloud asesment</h1>
+    </div>
+    <div id="environments"></div>
+    <div id="summary">
+        <h2>Summary</h2>
+    </div>
+    <div id="server_dialog" title="Dialog Title">
+        <form>
+            <div class="row"><label>Number of processors</label><input id="server_processor"  name="server_processor" type="text"></div>
+            <div class="row"><label>Memory in Gb</label><input id="server_memory"  name="server_memory" type="text"></div>
+            <div class="row"><label>Storage in Gb</label><input id="server_storage"  name="server_storage" type="text"></div>
+            <div class="row"><label>Lisence costs</label><input id="server_lisence"  name="server_lisence" type="text"></div>
+            <div class="row"><label>Notes</label><textarea id="server_notes"  name="server_notes" type="text"></textarea></div>
+        </form>
+    </div>
+    <div id="interface_dialog" title="Dialog Title">
+        <form>
+            <div class="row"><label>Bandwidth in Mb</label><input id="interface_bandwidth"  name="interface_bandwidth" type="text"></div>
+        </form>
+    </div>
+  </body>
+</html>
