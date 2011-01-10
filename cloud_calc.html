@@ -11,14 +11,14 @@ $(document).ready(function() {
 
     environments["Collaboration"] = new Environment("Collaboration");
     with(environments["Collaboration"]){
-        //                     server name              processors  memory  storage     Lience      Notes
-        add_server(new Server("Clear Case",             1,          2,      256,        0,          "needs licence costs added"));
+        //                     server name              processors  memory  storage     Lience      Notes,
+        add_server(new Server("CSM",             1,          2,      256,        0,          "needs licence costs added<br/> assumed its CA SCM - http://en.wikipedia.org/wiki/CA_Software_Change_Manager"));
         add_server(new Server("Team Foundation Server", 1,          2,      512,        1581.32,    "assumed licence cost"));   //http://www.ecostsoftware.com/microsoft/microsoft-visual-studio-2008-team-system-team-foundation-server_p3630?gclid=CL-PtOqE8qUCFVBO4QodryllpQ
         add_server(new Server("JIRA Confluence",        1,          2,      512,        1500,       "assumed cost"));             //http://www.atlassian.com/software/confluence/pricing.jsp
-        add_server(new Server("CI",                     1,          2,      256,        0,          "assumed open source" ));
+        add_server(new Server("CI",                     1,          2,      256,        0,          "assumed open source lisence<br/>needed for future working practice" ));
 
         //                           Interface name                 Bandwidth
-        add_interface(new Interface("Clear Case users",             1));
+        add_interface(new Interface("CSM users",             1));
         add_interface(new Interface("Team Foundation Server users", 1));
         add_interface(new Interface("JIRA Confluence users",        1));
 
@@ -26,35 +26,29 @@ $(document).ready(function() {
 
     environments["Shadow"] = new Environment("Shadow");
     with(environments["Shadow"]){
-        //                     server name          processors  memory  storage     Lience  Notes
-        add_server(new Server("CPDF",               1,          4,      256,        0,      ""));
-        add_server(new Server("Mitem",              1,          2,      256,        1500,   "assumed lisence cost"));
-        add_server(new Server("Chysalis Server",    1,          2,      256,        778,    "OS licence"));
-        add_server(new Server("SQL Server",         1,          2,      256,        1310,   "532 db lisence, 778 OS lisence"));
-        add_server(new Server("Biz Talk",           1,          2,      256,        778,    "free developer lisence"));
-        add_server(new Server("GIS",                1,          2,      256,        0,      "add licences"));
-        add_server(new Server("Prophet",            1,          2,      256,        0,      "add licences"));
-        add_server(new Server("Bank Validator",     1,          2,      256,        0,      "add licences"));
-        add_server(new Server("HMRC",               1,          2,      256,        0,      "add licences"));
+        //                     server name              processors  memory  storage     Lience  Notes
+        add_server(new Server("CPDF on Microfocus",     1,          4,      256,        10000, "will be running the microfocus server also<br/>This is an assumed lisence cost Steve De'Ath to provide details."));
+        add_server(new Server("Mitem - Chysalis Server",2,          2,      512,        2278,   "assumed licence cost (778 on OS)"));
+        add_server(new Server("SQL Server",             1,          2,      256,        1310,   "532 db licence, 778 OS licence"));
+        add_server(new Server("Stub Server",            1,          2,      256,        778,    "Provides stubs for the interfaces (Biz Talk, GIS, Prophet, Bank Validator, HMRC) <br/>Biz talk free developer licence<br/>need to look closley at the lisence costs for all components"));
 
         //                           Interface name                 Bandwidth
         add_interface(new Interface("CPDF to users",                1));
-        add_interface(new Interface("CPDF to ORPA",                 1));
-        add_interface(new Interface("CPDF to Document Management",  1));
-        add_interface(new Interface("Chysalis to users",            1));
-        add_interface(new Interface("Chrsalis DB to BACS",          1));
-        add_interface(new Interface("BizTalk to Document Man",      1));
-        add_interface(new Interface("Biz Talk to Work flow",        1));
+        add_interface(new Interface("CPDF to Document Management",  0.25));
+        add_interface(new Interface("Chysalis to users",            0.25));
+        add_interface(new Interface("Chrsalis DB to BACS",          0.25));
+        add_interface(new Interface("BizTalk to Document Man",      0.25));
+        add_interface(new Interface("Biz Talk to Work flow",        0.25));
     }
 
     environments["Test"] = new Environment("Test");
     with(environments["Test"]){
         //                     server name          processors  memory  storage     Lience  Notes
         add_server(new Server("CPDF",               4,          8,      256,        0,      ""));
-        add_server(new Server("Mitem",              1,          2,      256,        1500,   "assumed lisence cost"));
+        add_server(new Server("Mitem",              1,          2,      256,        1500,   "assumed licence cost"));
         add_server(new Server("Chysalis Server",    1,          2,      256,        778,    "OS licence"));
-        add_server(new Server("SQL Server",         1,          2,      256,        1310,   "532 db lisence, 778 OS lisence"));
-        add_server(new Server("Biz Talk",           1,          2,      256,        778,    "free developer lisence"));
+        add_server(new Server("SQL Server",         1,          2,      256,        1310,   "532 db licence, 778 OS licence"));
+        add_server(new Server("Biz Talk",           1,          2,      256,        778,    "free developer licence"));
         add_server(new Server("GIS",                1,          2,      256,        0,      "add licences"));
         add_server(new Server("Prophet",            1,          2,      256,        0,      "add licences"));
         add_server(new Server("Bank Validator",     1,          2,      256,        0,      "add licences"));
@@ -63,7 +57,6 @@ $(document).ready(function() {
 
         //                           Interface name                 Bandwidth
         add_interface(new Interface("CPDF to users",                1));
-        add_interface(new Interface("CPDF to ORPA",                 1));
         add_interface(new Interface("CPDF to Document Management",  1));
         add_interface(new Interface("Chysalis to users",            1));
         add_interface(new Interface("Chrsalis DB to BACS",          1));
@@ -74,19 +67,18 @@ $(document).ready(function() {
     environments["Production"] = new Environment("Production");
     with(environments["Production"]){
         //                     server name          processors  memory  storage     Lience  Notes
-        add_server(new Server("CPDF",               8,          16,     1024,       0,      ""));
-        add_server(new Server("Mitem",              2,          4,      256,        1500,   "assumed lisence cost"));
+        add_server(new Server("CPDF",               8,          16,     2048,       0,      ""));
+        add_server(new Server("Mitem",              2,          4,      256,        1500,   "assumed licence cost"));
         add_server(new Server("Chysalis Server",    2,          4,      256,        778,    "OS licence"));
-        add_server(new Server("SQL Server",         2,          4,      256,        1310,   "532 db lisence, 778 OS lisence"));
-        add_server(new Server("Biz Talk",           2,          4,      256,        778,    "free developer lisence"));
+        add_server(new Server("SQL Server",         2,          4,      1024,       1310,   "532 db licence, 778 OS licence"));
+        add_server(new Server("Biz Talk",           2,          4,      256,        778,    "free developer licence"));
         add_server(new Server("GIS",                2,          4,      256,        0,      "add licences"));
         add_server(new Server("Prophet",            2,          4,      256,        0,      "add licences"));
         add_server(new Server("Bank Validator",     2,          4,      256,        0,      "add licences"));
 
         //                           Interface name                 Bandwidth
         add_interface(new Interface("CPDF to users",                4));
-        add_interface(new Interface("CPDF to ORPA",                 1));
-        add_interface(new Interface("CPDF to Document Management",  4));
+        add_interface(new Interface("CPDF to Document Management",  1));
         add_interface(new Interface("Chysalis to users",            4));
         add_interface(new Interface("Chrsalis DB to BACS",          1));
         add_interface(new Interface("BizTalk to Document Man",      4));
@@ -135,7 +127,7 @@ function draw_summary(){
         total_processors += environments[i].get_processors();
         total_memory += environments[i].get_memory();
         total_storage += environments[i].get_storage();
-        total_licence += environments[i].get_lisence();
+        total_licence += environments[i].get_licence();
     }
 
     var cost_bandwidth = (total_bandwidth * parseFloat($("#cost_bandwidth").val())) ;
@@ -168,12 +160,12 @@ function Interface(name, bandwidth){return {
     }
 }}
 
-function Server(name, processor, memory, storage, lisence, notes ){return {
+function Server(name, processor, memory, storage, licence, notes ){return {
     name: name,
     processor: processor,
     memory: memory,
     storage: storage,
-    lisence: lisence,
+    licence: licence,
     notes: notes,
     environment: new Object(),
     get_li: function(){
@@ -230,10 +222,10 @@ function Environment(name){return {
             ret += this.servers[i].storage;
         return ret;
     },
-    get_lisence: function(){
+    get_licence: function(){
         var ret =0;
         for (var i in this.servers)
-            ret += this.servers[i].lisence;
+            ret += this.servers[i].licence;
         return ret;
     }
 
@@ -252,19 +244,26 @@ var environment_key = "";
 var interafce_key = "";
 $(function (){
 
-    $("#server_dialog").dialog({autoOpen: false, width: 335, modal:true, buttons: { "ok": function() {
-
-       with(environments[environment_key].servers[server_key]){
-           processor =  parseInt($("#server_processor").val());
-           memory = parseInt($("#server_memory").val());
-           storage = parseInt($("#server_storage").val());
-           lisence = parseInt($("#server_lisence").val());
-           notes = $("#server_notes").val();
-       }
-
-       $(this).dialog("close");
-       draw_summary();
-    }}});
+    $("#server_dialog").dialog({
+        autoOpen: false,
+        width: 335,
+        modal:true,
+        buttons: {
+            "ok": function() {
+           with(environments[environment_key].servers[server_key]){
+               processor =  parseInt($("#server_processor").val());
+               memory = parseInt($("#server_memory").val());
+               storage = parseInt($("#server_storage").val());
+               licence = parseInt($("#server_licence").val());
+               notes = $("#server_notes").val();
+           }
+           $(this).dialog("close");
+           draw_summary();
+           },
+           "Delete": function (){
+               alert("delete called");
+           }
+       }});
 
     $(".server").click(function(){
         var arr = this.id.split("_server_",2);
@@ -276,7 +275,7 @@ $(function (){
         $("#server_processor").val(server.processor);
         $("#server_memory").val(server.memory);
         $("#server_storage").val(server.storage);
-        $("#server_lisence").val(server.lisence);
+        $("#server_licence").val(server.licence);
         $("#server_notes").val(server.notes);
 
         $("#server_dialog").dialog("open");
@@ -357,7 +356,7 @@ body {
   <body>
     <div id="header">
         <img src="http://www.atosorigin.com/general/images/AtosOrigin_Olympic_Games_Logo.gif" >
-        <h1>Atosphere >> Cloud asesment >> CPDF</h1>
+        <h1>Atosphere >> Cloud Assessment >> CPDF</h1>
     </div>
       <p>
           Welcome to the Atosphere cloud calculator, this tool is designed to
@@ -390,7 +389,7 @@ body {
             <div class="row"><label>Number of processors</label><input id="server_processor"  name="server_processor" type="text"></div>
             <div class="row"><label>Memory in Gb</label><input id="server_memory"  name="server_memory" type="text"></div>
             <div class="row"><label>Storage in Gb</label><input id="server_storage"  name="server_storage" type="text"></div>
-            <div class="row"><label>Lisence costs</label><input id="server_lisence"  name="server_lisence" type="text"></div>
+            <div class="row"><label>Licence costs</label><input id="server_licence"  name="server_licence" type="text"></div>
             <div class="row"><label>Notes</label><textarea id="server_notes"  name="server_notes" type="text"></textarea></div>
         </form>
     </div>
